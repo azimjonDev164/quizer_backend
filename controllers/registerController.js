@@ -5,6 +5,8 @@ const sendEmail = require("../utils/sendEmail");
 const handleNewUser = async (req, res) => {
   const { user, email, pwd } = req.body;
 
+  console.log({ user, email, pwd });
+
   if (!user || !email || !pwd) {
     return res
       .status(400)
@@ -39,13 +41,15 @@ const handleNewUser = async (req, res) => {
       verificationCodeExpires: expires,
     });
 
+    newUser.save();
+
     // Send email
-    await sendEmail(
+    const response = await sendEmail(
       email,
       "Verify your email",
       `Your verification code is: ${otp}. It expires in 10 minutes.`
     );
-
+    console.log(response);
     res.status(201).json({ message: "User created. Please verify email." });
   } catch (err) {
     res.status(500).json({ message: err.message });
