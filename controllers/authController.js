@@ -19,23 +19,24 @@ const handleLogin = async (req, res) => {
     const accessToken = jwt.sign(
       {
         UserInfo: {
+          _id: foundUser._id,
           username: foundUser.username,
           roles: roles,
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "10s" }
+      { expiresIn: "15m" }
     );
     const refreshToken = jwt.sign(
-      { username: foundUser.username },
+      { _id: foundUser._id, username: foundUser.username },
       process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "7d" }
     );
     // Saving refreshToken with current user
     foundUser.refreshToken = refreshToken;
     const result = await foundUser.save();
-    console.log(result);
-    console.log(roles);
+    // console.log(result);
+    // console.log(roles);
 
     // Creates Secure Cookie with refresh token
     res.cookie("jwt", refreshToken, {

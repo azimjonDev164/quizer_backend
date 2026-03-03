@@ -27,8 +27,9 @@ app.use("/auth", require("./routes/auth"));
 app.use("/refresh", require("./routes/refresh"));
 app.use("/logout", require("./routes/logout"));
 
-// app.use(verifyJWT);
+app.use(verifyJWT);
 app.use("/user", require("./routes/api/user"));
+app.use("/quiz", require("./routes/api/quiz"));
 
 app.all(/\/*/, (req, res) => {
   res.status(404);

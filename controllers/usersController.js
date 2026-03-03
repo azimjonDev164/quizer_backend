@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const User = require("../model/User");
 
 const getAllUsers = async (req, res) => {
@@ -19,6 +20,34 @@ const deleteUser = async (req, res) => {
   res.json(result);
 };
 
+const updateUserRoles = async (req, res) => {
+  try {
+    const { roles, id } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid ID" });
+    }
+
+    if (!roles) {
+      return res.status(400).json({ message: "roles are required" });
+    }
+
+    const user = await User.findById({ _id: id });
+
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    user.roles = roles;
+    user.save();
+
+    return res.status(200).json({ message: "User roles changed successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 const getUser = async (req, res) => {
   if (!req?.params?.id)
     return res.status(400).json({ message: "User ID required" });
@@ -32,6 +61,7 @@ const getUser = async (req, res) => {
 };
 
 module.exports = {
+  updateUserRoles,
   getAllUsers,
   deleteUser,
   getUser,

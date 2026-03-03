@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
+const quizController = require("../../controllers/quizController");
 
-router.post("/", (req, res) => {});
-router.get("/", (req, res) => {});
-router.get("/:id", (req, res) => {});
-router.delete("/:id", (req, res) => {});
+router.post("/", quizController.createNewQuiz);
+router.get("/", quizController.getAllQuizs);
+router.put("/:id", quizController.updateQuiz);
+router.get("/:id", quizController.getQuizById);
+router.delete("/:id", quizController.deleteQuizByid);
 
 module.exports = router;

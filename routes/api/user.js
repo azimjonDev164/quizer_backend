@@ -4,12 +4,13 @@ const usersController = require("../../controllers/usersController");
 const ROLES_LIST = require("../../config/roles_list");
 const verifyRoles = require("../../middleware/verifyRoles");
 
-router.get("/", usersController.getAllUsers);
-router.delete("/", usersController.deleteUser);
+// router.get("/", usersController.getAllUsers);
+// router.delete("/", usersController.deleteUser);
+// router.put("/", usersController.updateUserRoles);
 
 router
-  .route("/user")
-  .get(verifyRoles(ROLES_LIST.User), usersController.getAllUsers)
+  .route("/")
+  .get(verifyRoles(ROLES_LIST.Admin), usersController.getAllUsers)
   .delete(verifyRoles(ROLES_LIST.Admin), usersController.deleteUser);
 
 router
