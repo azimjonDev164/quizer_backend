@@ -5,9 +5,10 @@ const Question = require("../model/Question");
 const getAllQuizs = async (req, res) => {
   try {
     const quizs = await Quiz.find();
-    if (!quizs.length == 0)
+    if (!quizs) {
       return res.status(204).json({ message: "No quizs found" });
-    return res.json({ message: "quizes", quizs });
+    }
+    res.status(200).json(quizs);
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: "Server error" });
@@ -21,10 +22,6 @@ const getQuizById = async (req, res) => {
       return res.status(400).json({ message: "Invalid quiz ID" });
     }
     const quiz = await Quiz.findOne({ _id: id, user: req.userId })
-      .populate({
-        path: "questions",
-        select: "questionText options correctAnswer",
-      })
       .populate("file")
       .lean();
     if (!quiz) {
@@ -83,11 +80,12 @@ const updateQuiz = async (req, res) => {
       return res.status(400).json({ message: "Invalid quiz ID" });
     }
 
-    if (quiz.user.toString() !== req.user._id.toString()) {
+    const quiz = await Quiz.findById(id);
+
+    if (quiz.user.toString() !== req.userId.toString()) {
       return res.status(403).json({ message: "Forbidden" });
     }
 
-    const quiz = await Quiz.findById(id);
     if (!quiz) {
       return res.status(404).json({ message: "Quiz not found" });
     }

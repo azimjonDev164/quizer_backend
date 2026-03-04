@@ -11,6 +11,7 @@ const verifyRoles = require("../../middleware/verifyRoles");
 router
   .route("/")
   .get(verifyRoles(ROLES_LIST.Admin), usersController.getAllUsers)
+  .put(verifyRoles(ROLES_LIST.Admin), usersController.updateUserRoles)
   .delete(verifyRoles(ROLES_LIST.Admin), usersController.deleteUser);
 
 router
