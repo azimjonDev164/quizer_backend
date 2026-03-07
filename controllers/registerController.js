@@ -51,7 +51,9 @@ const handleNewUser = async (req, res) => {
       `Your verification code is: ${otp}. It expires in 10 minutes.`
     );
     console.log(response);
-    res.status(201).json({ message: "User created. Please verify email." });
+    res
+      .status(201)
+      .json({ message: "User created. Please verify email." });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

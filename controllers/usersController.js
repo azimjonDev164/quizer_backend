@@ -49,15 +49,13 @@ const updateUserRoles = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
-  if (!req?.params?.id)
-    return res.status(400).json({ message: "User ID required" });
-  const user = await User.findOne({ _id: req.params.id }).exec();
+  const userId = req.userId;
+  if (userId) return res.status(400).json({ message: "User ID required" });
+  const user = await User.findOne({ _id: userId }).exec();
   if (!user) {
-    return res
-      .status(204)
-      .json({ message: `User ID ${req.params.id} not found` });
+    return res.status(204).json({ message: `User ID ${userId} not found` });
   }
-  res.json(user);
+  res.status(200).json(user);
 };
 
 module.exports = {

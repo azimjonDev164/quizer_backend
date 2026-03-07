@@ -14,8 +14,6 @@ router
   .put(verifyRoles(ROLES_LIST.Admin), usersController.updateUserRoles)
   .delete(verifyRoles(ROLES_LIST.Admin), usersController.deleteUser);
 
-router
-  .route("/:id")
-  .get(verifyRoles(ROLES_LIST.Admin), usersController.getUser);
+router.get("/me", usersController.getUser);
 
 module.exports = router;
