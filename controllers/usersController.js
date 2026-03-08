@@ -50,7 +50,7 @@ const updateUserRoles = async (req, res) => {
 
 const getUser = async (req, res) => {
   const userId = req.userId;
-  if (userId) return res.status(400).json({ message: "User ID required" });
+  if (!userId) return res.status(400).json({ message: "User ID required" });
   const user = await User.findOne({ _id: userId }).exec();
   if (!user) {
     return res.status(204).json({ message: `User ID ${userId} not found` });
