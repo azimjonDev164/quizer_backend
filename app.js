@@ -2,10 +2,12 @@ require("dotenv").config({ quiet: true });
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const { corsOption } = require("./config/corsOption");
 const path = require("path");
 const verifyJWT = require("./middleware/verifyJWT");
 const errorHandler = require("./middleware/errorHandler");
 const { logger } = require("./middleware/logEvent");
+const cookieParser = require("cookie-parser");
 const app = express();
 const PORT = process.env.PORT || 3000;
 const connectDB = require("./config/dbConn");
@@ -17,8 +19,8 @@ app.use(logger);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
-
+app.use(cookieParser());
+app.use(cors(corsOption));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", require("./routes/root"));
