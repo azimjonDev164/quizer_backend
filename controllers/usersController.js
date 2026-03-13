@@ -41,7 +41,9 @@ const updateUserRoles = async (req, res) => {
     user.roles = roles;
     user.save();
 
-    return res.status(200).json({ message: "User roles changed successfully" });
+    return res
+      .status(200)
+      .json({ message: "User roles changed successfully", user });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
