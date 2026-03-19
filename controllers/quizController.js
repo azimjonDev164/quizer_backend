@@ -21,9 +21,7 @@ const getQuizById = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid quiz ID" });
     }
-    const quiz = await Quiz.findOne({ _id: id, user: req.userId })
-      .populate("file")
-      .lean();
+    const quiz = await Quiz.findOne({ _id: id }).populate("file").lean();
     if (!quiz) {
       return res.status(404).json({ message: "Quiz not found" });
     }
@@ -48,7 +46,7 @@ const createNewQuiz = async (req, res) => {
 
     const existingQuiz = await Quiz.findOne({ title });
     if (existingQuiz) {
-      return res.status(409).json({ message: "Quiz title already exists" });
+      return res.status(409).json("Quiz title already exists");
     }
 
     const safeTags = Array.isArray(tags)
@@ -64,7 +62,9 @@ const createNewQuiz = async (req, res) => {
 
     result.save();
 
-    return res.status(201).json({ message: "Quiz created successfully" });
+    return res
+      .status(201)
+      .json({ message: "Quiz created successfully", result });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
