@@ -29,7 +29,8 @@ const createQuestion = async (req, res) => {
     }
 
     const existingQuestion = await Question.find({ questionText });
-
+    console.log(existingQuestion);
+    
     if (existingQuestion.length > 0) {
       return res.status(409).json({ message: "Question already exists" });
     }
@@ -42,7 +43,7 @@ const createQuestion = async (req, res) => {
     });
 
     result.save();
-    return res.status(200).json({ message: "Question created successfully" });
+    return res.status(200).json(result);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
