@@ -30,7 +30,7 @@ const createQuestion = async (req, res) => {
 
     const existingQuestion = await Question.find({ questionText });
     console.log(existingQuestion);
-    
+
     if (existingQuestion.length > 0) {
       return res.status(409).json({ message: "Question already exists" });
     }
@@ -69,4 +69,67 @@ const getQuestionOfQuizById = async (req, res) => {
   }
 };
 
-module.exports = { createQuestion, getQuestionOfQuizById, getAllQuestion };
+const updateQuestion = async (req, res) => {
+  try {
+    const { questionText, options, correctAnswer } = req.body;
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid quiz ID" });
+    }
+
+    const question = await Question.findById(id);
+
+    if (!question) {
+      return res.status(404).json({ message: "Question not found" });
+    }
+
+    if (questionText !== undefined) question.questionText = questionText;
+    if (correctAnswer !== undefined) question.correctAnswer = correctAnswer;
+    if (options !== undefined) {
+      if (!Array.isArray(options)) {
+        return res.status(400).json({ message: "options must be an array" });
+      }
+
+      question.options = options.map((item) => String(item));
+    }
+
+    question.save();
+
+    return res
+      .status(201)
+      .json({ message: "Question updated successfully!", question });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+const deleteQuestionByid = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid quiz ID" });
+    }
+
+    const question = await Question.findOneAndDelete({ _id: id });
+
+    if (!question) {
+      return res.status(404).json({
+        message: "Question not found or you are not allowed to delete it",
+      });
+    }
+
+    return res.status(200).json({ message: "Question deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+module.exports = {
+  createQuestion,
+  getQuestionOfQuizById,
+  getAllQuestion,
+  updateQuestion,
+  deleteQuestionByid,
+};
