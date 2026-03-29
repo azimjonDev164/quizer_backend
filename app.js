@@ -33,6 +33,7 @@ app.use(verifyJWT);
 app.use("/user", require("./routes/api/user"));
 app.use("/quiz", require("./routes/api/quiz"));
 app.use("/question", require("./routes/api/questions"));
+app.use("/result", require("./routes/api/result"));
 
 app.all(/\/*/, (req, res) => {
   res.status(404);

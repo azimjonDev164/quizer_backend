@@ -23,6 +23,7 @@ const resultSchema = new Schema(
       type: Number,
       required: true,
     },
+    attemptNumber: { type: Number, default: 1 },
     answers: [
       {
         question: {
