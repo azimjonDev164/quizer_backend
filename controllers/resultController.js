@@ -19,6 +19,7 @@ const createResult = async (req, res) => {
   try {
     const { quizId, score, total, answers } = req.body;
     const userId = req.userId; // Assumes your auth middleware provides this
+    console.log({ quizId, score, total, answers });
 
     // 1. Validation
     if (!mongoose.Types.ObjectId.isValid(quizId)) {
@@ -40,15 +41,20 @@ const createResult = async (req, res) => {
 
     const nextAttempt = lastAttempt ? lastAttempt.attemptNumber + 1 : 1;
 
-    // 3. Create the Document
-    // Result.create() returns the saved document directly
+    const processedAnswers = answers.map((ans) => ({
+      question: ans.question,
+      selected: ans.selected,
+      // If the selected answer matches the correct one, save true, else false
+      correct: ans.selected === ans.correct,
+    }));
+
     const newResult = await Result.create({
       user: userId,
       quiz: quizId,
       score,
       total,
       attemptNumber: nextAttempt,
-      answers,
+      answers: processedAnswers,
     });
 
     // 4. Response
