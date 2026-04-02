@@ -3,7 +3,8 @@ const Result = require("../model/Result");
 
 const getAllResult = async (req, res) => {
   try {
-    const results = await Result.find();
+    const userId = req.userId
+    const results = await Result.find({user: userId});
     if (!results) {
       return res.status(204).json({ message: "No results found" });
     }
