@@ -1,5 +1,5 @@
 const corsOption = {
-  origin: "http://localhost:5173",
+  origin: "https://quizer-frontend-gxs9.vercel.app",
   credentials: true,
 };
 
